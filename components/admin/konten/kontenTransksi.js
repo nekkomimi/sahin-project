@@ -546,6 +546,7 @@ export default function KontenTransaksi() {
 
                     </Col>
                     <Col lg={{ span: 4, }} md={{ span: 5 }} sm={{ span: 10 }} xs={{ span: 24 }} >
+                        <Space direction="horizontal">
                         <Select
                             defaultValue="All"
                             style={{
@@ -564,6 +565,7 @@ export default function KontenTransaksi() {
                             <Option value="Decline">Decline</Option>
 
                         </Select>
+                        </Space>
                     </Col>
                     <Col>
                     <RangePicker

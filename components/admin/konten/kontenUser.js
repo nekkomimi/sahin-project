@@ -244,12 +244,13 @@ export default function KontenUsers() {
 
                     </Col>
                     <Col lg={{ span: 5, }} md={{ span: 5 }} sm={{ span: 10 }} xs={{ span: 24 }}>
-
+                            
                         <Button type='primary' onClick={ExportXl}
                             style={{ color: "white", width: "150px", height: "40px", borderRadius: "20px", fontSize: "18px" }}
                             icon={<PrinterOutlined style={{ fontSize: "20px" }} />}>Print</Button>
                     </Col>
                     <Col lg={{ span: 4, }} md={{ span: 5 }} sm={{ span: 10 }} xs={{ span: 24 }} >
+                        <Space direction="horizontal">
                         <Select
                             defaultValue="All"
                             style={{
@@ -265,6 +266,7 @@ export default function KontenUsers() {
                                 Merchant
                             </Option>
                         </Select>
+                        </Space>
                     </Col>
                     <Col>
                     <RangePicker
