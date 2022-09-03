@@ -5,9 +5,6 @@ const nextConfig = {
   images: {
     domains: ["https://project-wo.herokuapp.com/"],
   },
-  eslint : {
-    ignoreDuringBuilds: true
-  }
 }
 
 module.exports = nextConfig

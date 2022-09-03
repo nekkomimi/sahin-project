@@ -1,4 +1,4 @@
-import { DatePicker,Space, Table, Tag, Button, Layout, Row, Col, Tooltip, AutoComplete, Input, Modal, Select, message } from 'antd';
+import { Space, Table, Tag, Button, Layout, Row, Col, Tooltip, AutoComplete, Input, Modal, Select, message, DatePicker } from 'antd';
 import { EyeOutlined, DeleteOutlined, EditOutlined, CheckOutlined, CloseOutlined, PrinterOutlined } from '@ant-design/icons';
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
@@ -6,12 +6,10 @@ import axios from "axios";
 import qs from 'qs'
 import Highlighter from "react-highlight-words";
 import * as moment from 'moment'
-
-const { RangePicker } = DatePicker
 const { Header, Content, Sider } = Layout;
 const { Search } = Input;
 const { Option } = Select;
-
+const { RangePicker } = DatePicker
 function getColumns(deleteModal, updateModal, imageModal, hapusModal) {
     return [
         {
@@ -241,10 +239,6 @@ export default function KontenTransaksi() {
     const [fromDate, setFromDate] = useState('')
     const [toDate, setToDate] = useState('')
 
-
-
-
-
     const searchInput = useRef(null);
 
     const [loading, setLoading] = useState(false);
@@ -432,11 +426,6 @@ export default function KontenTransaksi() {
 
     };
 
-    const handleDatePicker = (data) => {
-        setFromDate(moment(data[0]._d).format('YYYY-MM-DD'))
-        setToDate(moment(data[1]._d).format('YYYY-MM-DD'))
-    }
-
     //akhir update modal
 
     //start Image modal
@@ -466,7 +455,11 @@ export default function KontenTransaksi() {
         // location.reload()
     };
 
-
+    const handleDatePicker = (data) => {
+        console.log(data)
+        setFromDate(moment(data[0]._d).format('YYYY-MM-DD'))
+        setToDate(moment(data[1]._d).format('YYYY-MM-DD'))
+    }
 
     const handleCancel = () => {
         console.log('Clicked cancel button');
@@ -501,12 +494,12 @@ export default function KontenTransaksi() {
     };
     useEffect(() => {
         validate()
-    }, [fromDate, toDate]);
+    }, []);
 
 
     async function ExportXl() {
         try {
-            await axios.get("https://project-wo.herokuapp.com/transaction/export/data", {
+            await axios.get(`https://project-wo.herokuapp.com/transaction/export/data?from=${fromDate}&to=${toDate}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token_admin")}`
                 }
@@ -534,7 +527,7 @@ export default function KontenTransaksi() {
                         <AutoComplete
                             dropdownMatchSelectWidth={252}
                             style={{
-                                width: 300,
+                                width: 280,
                             }}
                             options={options}
                             onSelect={onSelect}
@@ -545,9 +538,8 @@ export default function KontenTransaksi() {
                         </AutoComplete>
 
                     </Col>
-                    <Col lg={{ span: 4, }} md={{ span: 5 }} sm={{ span: 10 }} xs={{ span: 24 }} >
-                        <Space direction="horizontal">
-                        <Select
+                    <Col lg={{ span: 4, }} md={{ span: 5 }} sm={{ span: 10 }} xs={{ span: 24 }} offset={1}>
+                        <div>Filter : <Select
                             defaultValue="All"
                             style={{
                                 width: 150,
@@ -564,15 +556,17 @@ export default function KontenTransaksi() {
                             <Option value="Expired">Expired</Option>
                             <Option value="Decline">Decline</Option>
 
-                        </Select>
-                        </Space>
+                        </Select></div>
+
                     </Col>
-                    <Col>
-                    <RangePicker
+                    <Col span={7}>
+                        <div>Filter Print : <RangePicker
                             format="YYYY-MM-DD"
                             onChange={handleDatePicker}
-                            //   onOk={onOk}
-                            />
+                        //   onOk={onOk}
+                        />
+
+                        </div>
                     </Col>
                     <Col lg={{ span: 5, }} md={{ span: 5 }} sm={{ span: 10 }} xs={{ span: 24 }}>
 
