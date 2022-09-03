@@ -505,7 +505,7 @@ export default function KontenTransaksi() {
                 }
             }).then(res => {
                 console.log(res)
-                window.location.href = res.data.filename
+                window.open(res.data.filename)
                 // document.body.append(res.data.filename)
 
             })

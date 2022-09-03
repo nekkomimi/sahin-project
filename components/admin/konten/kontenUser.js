@@ -218,7 +218,7 @@ export default function KontenUsers() {
                 }
             }).then(res => {
                 console.log(res)
-                window.location.href = res.data.filename
+                window.open(res.data.filename)
             })
         } catch (error) {
             if (error) {
