@@ -5,9 +5,10 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import qs from 'qs'
 import Highlighter from "react-highlight-words";
+import { setRequestMeta } from 'next/dist/server/request-meta';
 import * as moment from 'moment'
 
-const { RangePicker} = DatePicker
+const { RangePicker } = DatePicker
 const { Header, Content, Sider } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -92,9 +93,9 @@ export default function KontenUsers() {
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [modalText, setModalText] = useState('Content of the modal');
     const [modalTaskId, setModalTaskId] = useState('');
+    const [meta, setMeta] = useState('')
     const [fromDate, setFromDate] = useState('')
     const [toDate, setToDate] = useState('')
-
 
 
     const searchInput = useRef(null);
@@ -111,7 +112,7 @@ export default function KontenUsers() {
     async function validate(params = {}) {
         try {
 
-            const getUsers = await axios.get("https://project-wo.herokuapp.com/users", {
+            const getUsers = await axios.get("https://project-wo.herokuapp.com/users?limit=1000", {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token_admin")}`
                 }
@@ -119,11 +120,12 @@ export default function KontenUsers() {
             ).then(response => {
                 if (response.status == 200 || response.status == 201) {
                     setDataUser(response.data.items)
+                    setMeta(response.data.meta)
                 }
             })
             setPagination({
                 ...params.pagination,
-                total: dataUser.length
+                total: meta.totalItems
             });
 
         } catch (error) {
@@ -153,11 +155,6 @@ export default function KontenUsers() {
 
     };
 
-    const handleDatePicker = (data) => {
-        setFromDate(moment(data[0]._d).format('YYYY-MM-DD'))
-        setToDate(moment(data[1]._d).format('YYYY-MM-DD'))
-    }
-
     const handleOkModal = () => {
         axios.delete(`https://project-wo.herokuapp.com/users/delete/${modalTaskId}`, {
             headers: {
@@ -167,10 +164,11 @@ export default function KontenUsers() {
             console.log(res)
 
         })
-        validate()
+
         setModalText('The modal will be closed after two seconds');
         setConfirmLoading(true);
         setTimeout(() => {
+            validate()
             setVisible(false);
             setConfirmLoading(false);
         }, 2000);
@@ -203,7 +201,7 @@ export default function KontenUsers() {
     };
     useEffect(() => {
         validate()
-    }, []);
+    }, [fromDate, toDate]);
 
     async function ExportXl() {
         try {
@@ -246,15 +244,7 @@ export default function KontenUsers() {
                             style={{ color: "white", width: "150px", height: "40px", borderRadius: "20px", fontSize: "18px" }}
                             icon={<PrinterOutlined style={{ fontSize: "20px" }} />}>Print</Button>
                     </Col>
-                    <Col>
-                    <RangePicker
-                            format="YYYY-MM-DD"
-                            onChange={handleDatePicker}
-                            //   onOk={onOk}
-                            />
-                    </Col>
                     <Col lg={{ span: 4, }} md={{ span: 5 }} sm={{ span: 10 }} xs={{ span: 24 }} >
-
                         <Select
                             defaultValue="All"
                             style={{
@@ -270,6 +260,13 @@ export default function KontenUsers() {
                                 Merchant
                             </Option>
                         </Select>
+                    </Col>
+                    <Col>
+                    <RangePicker
+                            format="YYYY-MM-DD"
+                            onChange={handleDatePicker}
+                            //   onOk={onOk}
+                            />
                     </Col>
                 </Row>
                 <Row justify="center" align="middle" style={{ overflow: "auto" }}>

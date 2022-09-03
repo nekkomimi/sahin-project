@@ -294,10 +294,10 @@ export default function Transaksi() {
     const [modalTaskIdTiga, setModalTaskIdTiga] = useState('');
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [transaksi, setTransaksi] = useState([])
-    // const [pagination, setPagination] = useState({
-    //     current: 1,
-    //     pageSize: 5,
-    // });
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 5,
+    });
     const [itemCount, setItemCount] = useState("")
     const router = useRouter()
     const [form] = Form.useForm();
@@ -310,19 +310,24 @@ export default function Transaksi() {
     }
 
 
-    async function getData() {
+    async function getData(params = {}) {
         try {
             const getToken = await localStorage.getItem("token_customer")
             const decode = await jwt_decode(getToken)
-            await axios.get(`https://project-wo.herokuapp.com/transaction`, {
+            await axios.get("https://project-wo.herokuapp.com/transaction", {
                 headers: {
                     'Authorization': `Bearer ${getToken}`
                 }
             }).then(res => {
-                console.log(res.data.links, "ini pages")
+                // console.log(res.data.links, "ini pages")
                 if (res.status == 200 || res.status == 201) {
                     setItemCount(res.data.meta.totalPages)
                     setTransaksi(res.data.items)
+                    setPagination({
+                        ...params.pagination,
+                        total: res.data.meta.itemCount,
+                        // current: 1
+                    });
                 }
             })
 
@@ -333,11 +338,11 @@ export default function Transaksi() {
             }
         }
     }
-    async function nextData(page) {
+    async function nextData() {
         try {
             const getToken = await localStorage.getItem("token_customer")
             const decode = await jwt_decode(getToken)
-            await axios.get(`https://project-wo.herokuapp.com/transaction?page=${page}&limit=20`, {
+            await axios.get("https://project-wo.herokuapp.com/transaction", {
                 headers: {
                     'Authorization': `Bearer ${getToken}`
                 }
@@ -372,7 +377,7 @@ export default function Transaksi() {
 
         getData()
         dataSelected()
-    }, [itemCount]);
+    }, []);
 
     const handleTableChange = (e, newPagination, filters, sorter) => {
         console.log(e)
@@ -531,13 +536,9 @@ export default function Transaksi() {
                                 columns={getColumns(deleteModal, hapusModal, reviewModal)}
                                 dataSource={dataSelected()}
                                 size="large"
-                                pagination={{
-                                    total: itemCount, onChange: (page) => {
-                                        nextData(page)
-                                    }
-                                }}
+                                pagination={pagination}
                                 scroll={{ y: 300 }}
-                                // onChange={handleTableChange}
+                                onChange={handleTableChange}
                             />
                         </Col>
                     </Row>
