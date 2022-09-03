@@ -155,6 +155,11 @@ export default function KontenUsers() {
 
     };
 
+    const handleDatePicker = (data) => {
+        setFromDate(moment(data[0]._d).format('YYYY-MM-DD'))
+        setToDate(moment(data[1]._d).format('YYYY-MM-DD'))
+    }
+
     const handleOkModal = () => {
         axios.delete(`https://project-wo.herokuapp.com/users/delete/${modalTaskId}`, {
             headers: {
