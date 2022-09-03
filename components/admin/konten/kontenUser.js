@@ -217,7 +217,8 @@ export default function KontenUsers() {
                     'Authorization': `Bearer ${localStorage.getItem("token_admin")}`
                 }
             }).then(res => {
-                window.open(res.data.filename)
+                console.log(res)
+                window.location.href = res.data.filename
             })
         } catch (error) {
             if (error) {
