@@ -315,6 +315,7 @@ export default function Transaksi() {
     const [visibleTiga, setVisibleTiga] = useState(false);
     const [modalTaskIdTiga, setModalTaskIdTiga] = useState('');
     const [confirmLoading, setConfirmLoading] = useState(false);
+    const [tokenId, setTokenId] = useState('')
     const [transaksi, setTransaksi] = useState([])
     const [pagination, setPagination] = useState({
         current: 1,
@@ -394,9 +395,7 @@ export default function Transaksi() {
         }
     }
     function dataSelected() {
-        const getToken = localStorage.getItem("token_customer")
-        const decode = jwt_decode(getToken)
-        const findData = transaksi.filter((data) => data.user.id == decode.user_id)
+        const findData = transaksi.filter((data) => data.user.id == ambilToken())
         return findData
     }
     useEffect(() => {
