@@ -354,7 +354,7 @@ export default function ProductIdCustomer() {
             </Layout>
             <Content className="h-full mt-20 p-10 ">
                 <Row justify="space-evenly">
-                    <Col span="8" className="border-2 border-gray-200 shadow-md">
+                    <Col span="7" className="border-2 border-gray-200 shadow-md">
                         <Image loader={() => dataSelected?.image}
                             src={`https://project-wo.herokuapp.com/product/image/${dataSelected?.image}`}
                             priority={true}
@@ -368,7 +368,7 @@ export default function ProductIdCustomer() {
                     </Col>
 
                     <Col
-                        style={{ textAlign: "justify" }}
+                        style={{ textAlign: "start" }}
                         span="5" offset={2}
                     >
                         <h2 className="font-bold text-2xl text-black">{dataSelected?.name}</h2>
@@ -602,7 +602,7 @@ export default function ProductIdCustomer() {
                         <Col span={11}>
                             {dataReview.slice(0, 5).map((data) => {
                                 return (<>
-                                    <Row justify="start" className=" border-2 mt-5 border-pink-500 " key={data.id}>
+                                    <Row justify="start" className=" border-2 ml-5 mt-5 border-pink-500 " key={data.id}>
                                         <Col span={11}>
                                             <div className="p-5 ">
                                                 <div className="my-5">
